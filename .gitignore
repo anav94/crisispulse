@@ -1,0 +1,22 @@
+# env
+.env
+.env.example
+
+# python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# jupyter
+.ipynb_checkpoints/
+Untitled.ipynb
+
+# build/artifacts
+artifacts/
+
+# tests cache
+tests/__pycache__/
+
+# macOS
+.DS_Store
