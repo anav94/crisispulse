@@ -1,0 +1,35 @@
+name: Data Drift Check
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  drift-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install evidently pandas
+
+      - name: Run drift check
+        run: |
+          python scripts/run_drift_check.py
+
+      - name: Upload drift reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: drift-reports
+          path: artifacts/evidently/*.*

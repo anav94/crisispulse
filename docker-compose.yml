@@ -1,0 +1,93 @@
+version: "3.9"
+
+services:
+  redpanda:
+    image: redpandadata/redpanda:v24.2.3
+    command:
+      - redpanda start
+      - --overprovisioned
+      - --smp=1
+      - --memory=256M
+      - --reserve-memory=0M
+      - --node-id=0
+      - --check=false
+      - --kafka-addr=PLAINTEXT://0.0.0.0:9092,OUTSIDE://0.0.0.0:19092
+      - --advertise-kafka-addr=PLAINTEXT://redpanda:9092,OUTSIDE://localhost:19092
+    ports: ["9092:9092","9644:9644","19092:19092"]
+    healthcheck:
+      test: ["CMD-SHELL", "rpk cluster info -X brokers=redpanda:9092 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-cp_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cp_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-crisispulse}
+    ports: ["5432:5432"]
+    volumes: [ "pgdata:/var/lib/postgresql/data" ]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-cp_user} -d ${POSTGRES_DB:-crisispulse}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  collectors:
+    build: ./services/collectors
+    env_file: .env.example
+    command: [ "bash", "-lc", "python -m collectors.usgs_quakes & python -m collectors.synthetic" ]
+    depends_on:
+      redpanda: { condition: service_healthy }
+
+  processor:
+    build: ./services/processor
+    env_file: .env.example
+    command: [ "bash", "-lc", "python -m processor.processor" ]
+    depends_on:
+      redpanda: { condition: service_healthy }
+      postgres: { condition: service_healthy }
+    volumes: [ "./services/processor:/app" ]
+    ports: ["9000:9000"]
+
+  api:
+    build: ./services/api
+    env_file: .env.example
+    ports: ["8000:8000"]
+    depends_on:
+      postgres: { condition: service_healthy }
+    volumes: [ "./services/api:/app" ]
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    command: [ "--config.file=/etc/prometheus/prometheus.yml" ]
+    volumes: [ "./infra/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro" ]
+    ports: ["9090:9090"]
+
+  grafana:
+    image: grafana/grafana:11.1.4
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-worldmap-panel,vertamedia-clickhouse-datasource
+    volumes: [ "./infra/grafana/provisioning:/etc/grafana/provisioning" ]
+    ports: ["3000:3000"]
+    depends_on: ["prometheus"]
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.3
+    container_name: crisispulse-clickhouse
+    environment:
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: cp_pass
+    ports:
+      - "8123:8123"
+      - "9009:9009"
+    volumes:
+      - ./services/clickhouse/data:/var/lib/clickhouse
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+
+volumes:
+  pgdata: {}

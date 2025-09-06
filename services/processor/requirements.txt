@@ -1,0 +1,10 @@
+aiokafka==0.11.0
+asyncpg==0.29.0
+prometheus-client==0.20.0
+orjson==3.10.7
+datasketch==1.6.5
+h3==3.7.7
+psycopg2-binary==2.9.9
+pytest==8.3.2
+evidently==0.4.28
+jupyterlab

@@ -1,0 +1,56 @@
+{
+  "title": "CrisisPulse Overview",
+  "schemaVersion": 39,
+  "editable": true,
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Incidents inserted (5m)",
+      "targets": [
+        {
+          "expr": "sum(increase(crisispulse_incidents_inserted_total[5m]))"
+        }
+      ],
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Dedup dropped (5m)",
+      "targets": [
+        {
+          "expr": "sum(increase(crisispulse_dedup_dropped_total[5m]))"
+        }
+      ],
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 0
+      }
+    },
+    {
+      "type": "gauge",
+      "title": "Latency p95 (s)",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(crisispulse_latency_seconds_bucket[2m])) by (le))"
+        }
+      ],
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 4
+      }
+    }
+  ]
+}
