@@ -1,5 +1,5 @@
 # CrisisPulse
-
+![Data Drift Check](https://github.com/anav94/crisispulse/actions/workflows/drift.yml/badge.svg)
 [![CI](https://github.com/anav94/crisispulse/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/anav94/crisispulse/actions/workflows/ci.yml)
 
 > Real-time event intelligence pipeline: from noisy feeds → clean, geo-tagged incidents in seconds.
