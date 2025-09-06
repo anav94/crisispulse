@@ -51,7 +51,7 @@ Collectors → Kafka/Redpanda → Processor (dedup + enrich) → Postgres + Clic
 - **Average Severity Over Time**  
 - **Top Sources** (bar chart)  
 - **Geo Map** (incident clusters)
-
+![Dashboard Overview](docs/dashboard_overview.png)![Architecture Diagram](docs/architecture.png)
 ---
 
 ## 🧩 Setup
