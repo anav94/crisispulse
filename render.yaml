@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: crisispulse-api
+    env: docker
+    plan: free
+    region: oregon   # or frankfurt, depending on preference
+    dockerfilePath: ./services/api/Dockerfile
+    buildCommand: ""   # Docker handles build
+    startCommand: ""   # Use CMD in Dockerfile
+    envVars:
+      - key: CLICKHOUSE_HOST
+        value: crisispulse-clickhouse
+      - key: CLICKHOUSE_PORT
+        value: 8123
+      - key: CLICKHOUSE_DB
+        value: crisispulse
+      - key: CLICKHOUSE_USER
+        value: default
+      - key: CLICKHOUSE_PASSWORD
+        value: Anav_1738
