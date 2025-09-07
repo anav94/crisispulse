@@ -6,6 +6,7 @@
 > Real-time event intelligence pipeline: from noisy feeds → clean, geo-tagged incidents in seconds.  
 
 🔗 **Live Demo (Streamlit):** https://anav94crisispulse.streamlit.app/
+
 📊 **Dashboards:** Grafana (latency, duplicates, trends)  
 🛠️ **Stack:** Python, Kafka/Redpanda, FastAPI, Postgres, ClickHouse, Docker, Grafana, Streamlit
 
