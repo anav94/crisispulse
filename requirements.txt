@@ -1,0 +1,5 @@
+streamlit
+pandas
+clickhouse-connect
+altair
+pydeck
