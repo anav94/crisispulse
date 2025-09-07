@@ -3,6 +3,7 @@
 
 🔗 **Live Demo:** [CrisisPulse Dashboard](https://crisispulse.streamlit.app)  
 *(Shows real-time data if backend is up, otherwise synthetic demo data)*
+
 ![Data Drift Check](https://github.com/anav94/crisispulse/actions/workflows/drift.yml/badge.svg)
 [![CI](https://github.com/anav94/crisispulse/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/anav94/crisispulse/actions/workflows/ci.yml)
 
